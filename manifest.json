@@ -2,7 +2,7 @@
   "name": "PWAサンプル",
   "short_name": "pwa",
   "description": "sample",
-  "start_url": "index.html",
+  "start_url": "new.html",
   "display": "standalone",
   "icons": [
     {
