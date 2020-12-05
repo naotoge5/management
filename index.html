@@ -22,7 +22,7 @@
         <div class="collapse navbar-collapse" id="menu">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/">Home<span class="sr-only">(current)</span></a>
+                    <a class="nav-link active" href="index.html">Home<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="new.html">新規登録</a>
@@ -34,14 +34,31 @@
         </div>
     </nav>
 </header>
-<main>
-    <div>
-        <h1>年間</h1>
-    </div>
-    <div>
-        <h1>月間</h1>
+<div class="p-3">&nbsp;</div>
+<main id="index">
+    <div class="container p-4">
+        <div class="card">
+            <div class="card-header text-center">
+                <button class="btn btn-outline-primary float-left" onclick="tapNext('#year',-1);">＜</button>
+                <button class="btn d-inline plate"><strong id="year">2020</strong></button>
+                <button class="btn btn-outline-primary float-right" onclick="tapNext('#year',1);">＞</button>
+            </div>
+            <div class="card-body">
+                年間データ
+            </div>
+        </div>
+        <div class="card mt-2">
+            <div class="card-header text-center">
+                <button class="btn btn-outline-primary float-left" onclick="tapNext('#month',-1);">＜</button>
+                <button class="btn d-inline plate"><strong id="month">12</strong></button>
+                <button class="btn btn-outline-primary float-right" onclick="tapNext('#month',1);">＞</button>
+            </div>
+            <div class="card-body">
+                月間データ
+            </div>
+        </div>
     </div>
 </main>
-<footer><a href="new.html">new</a><a href="show.html">show</a></footer>
+<footer></footer>
 </body>
 </html>
