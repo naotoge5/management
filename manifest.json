@@ -1,0 +1,14 @@
+{
+  "name": "PWAサンプル",
+  "short_name": "pwa",
+  "description": "sample",
+  "start_url": "index.html",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "images/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
