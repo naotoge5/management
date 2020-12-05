@@ -1,6 +1,6 @@
 {
-  "name": "PWAサンプル",
-  "short_name": "pwa",
+  "name": "WEB内給与管理システム",
+  "short_name": "給与管理",
   "description": "sample",
   "start_url": "new.html",
   "display": "standalone",
