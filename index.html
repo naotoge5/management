@@ -37,26 +37,33 @@
 <div class="p-3">&nbsp;</div>
 <main id="index">
     <div class="container p-4">
-        <div class="card">
-            <div class="card-header text-center">
-                <button class="btn btn-outline-primary float-left" onclick="tapNext('#year',-1);">＜</button>
-                <button class="btn d-inline plate"><strong id="year">2020</strong></button>
-                <button class="btn btn-outline-primary float-right" onclick="tapNext('#year',1);">＞</button>
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <div id="year" class="card mb-4">
+                    <div class="card-header text-center">
+                        <button class="btn btn-outline-primary float-left">＜</button>
+                        <button class="btn d-inline"><strong></strong></button>
+                        <button class="btn btn-outline-primary float-right">＞</button>
+                    </div>
+                    <div class="card-body">
+                        年間データ
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                年間データ
+            <div class="col-12 col-md-6">
+                <div id="month" class="card mb-4">
+                    <div class="card-header text-center">
+                        <button class="btn btn-outline-primary float-left">＜</button>
+                        <button class="btn d-inline"><strong></strong></button>
+                        <button class="btn btn-outline-primary float-right">＞</button>
+                    </div>
+                    <div class="card-body">
+                        月間データ
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="card mt-2">
-            <div class="card-header text-center">
-                <button class="btn btn-outline-primary float-left" onclick="tapNext('#month',-1);">＜</button>
-                <button class="btn d-inline plate"><strong id="month">12</strong></button>
-                <button class="btn btn-outline-primary float-right" onclick="tapNext('#month',1);">＞</button>
-            </div>
-            <div class="card-body">
-                月間データ
-            </div>
-        </div>
+
     </div>
 </main>
 <footer></footer>

@@ -1,10 +1,10 @@
 const DB_NAME = 'management';
 const DB_VERSION = 1;
+
 //jQuery
 $(function () {
     if ($("#index").length) {
-        $("#year .plate").val(today('YEAR'));
-        $("#month .plate").val(today('MONTH'));
+        setValue('init');
         let request = indexedDB.open(DB_NAME, DB_VERSION);
         request.onupgradeneeded = function (e) {
             upgrade(e);
@@ -16,6 +16,18 @@ $(function () {
                 console.log(data);
             }
         };
+        $(".float-left:first").click(function () {
+            setValue('YEAR', -1);
+        })
+        $(".float-right:first").click(function () {
+            setValue('YEAR', 1);
+        })
+        $(".float-left:last").click(function () {
+            setValue('MONTH', -1);
+        })
+        $(".float-right:last").click(function () {
+            setValue('MONTH', 1);
+        })
     }
     if ($("#new").length) {
         let year = today('YEAR');
@@ -107,9 +119,9 @@ function readMonthReports(e) {
     return index.getAll(range);
 }
 
-function today(type) {
+function today(ymd) {
     let today = new Date();
-    switch (type) {
+    switch (ymd) {
         case 'YEAR':
             return today.getFullYear();
         case 'MONTH':
@@ -119,6 +131,34 @@ function today(type) {
     }
 }
 
-function tapNext(tag, num) {
-    $(tag).text(parseInt($(tag).text()) + num);
+function setValue(type, num = 0) {
+    let year;
+    let month;
+    switch (type) {
+        case 'YEAR':
+            year = parseInt($("#year strong").text()) + num;
+            $("#year strong").text(year);
+            break;
+        case 'MONTH':
+            month = parseInt($("#month strong").text()) + num;
+            switch (month) {
+                case 0:
+                    $("#month strong").text(12);
+                    break;
+                case 13:
+                    $("#month strong").text(1);
+                    break;
+                default:
+                    $("#month strong").text(month);
+            }
+            break;
+        default:
+            year = today('YEAR');
+            month = today('MONTH');
+            year += (month === 12) ? 1 : 0;
+            $("#year strong").text(year);
+            $("#month strong").text(month);
+            break;
+    }
+
 }
