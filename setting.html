@@ -22,50 +22,32 @@
         <div class="collapse navbar-collapse" id="menu">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" href="index.html">Home<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="new.html">新規登録</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="setting.html">設定</a>
+                    <a class="nav-link active" href="setting.html">設定<span class="sr-only">(current)</span></a>
                 </li>
             </ul>
         </div>
     </nav>
 </header>
 <div class="p-3">&nbsp;</div>
-<main id="index">
+<main id="setting">
     <div class="container p-4">
-        <div class="row">
-            <div class="col-12 col-md-6">
-                <div id="year" class="card mb-4">
-                    <div class="card-header text-center">
-                        <button class="btn btn-outline-primary float-left">＜</button>
-                        <button class="btn d-inline"><strong></strong></button>
-                        <button class="btn btn-outline-primary float-right">＞</button>
-                    </div>
-                    <div class="card-body">
-                        年間データ
-                    </div>
+        <div class="card">
+            <div class="card-body">
+                <h3 class="card-title">Settings</h3>
+                <div class="form-group">
+                    <label>時給</label>
+                    <input class="form-control" name="hourly" type="number" max="2000" min="800" step="10" required>
                 </div>
-            </div>
-            <div class="col-12 col-md-6">
-                <div id="month" class="card mb-4">
-                    <div class="card-header text-center">
-                        <button class="btn btn-outline-primary float-left">＜</button>
-                        <button class="btn d-inline"><strong></strong></button>
-                        <button class="btn btn-outline-primary float-right">＞</button>
-                    </div>
-                    <div class="card-body">
-                        月間データ
-                    </div>
-                </div>
+                <button id="submit" class="btn btn-success">更新</button>
             </div>
         </div>
-
     </div>
 </main>
-<footer></footer>
 </body>
 </html>
