@@ -1,12 +1,12 @@
 const DB_NAME = 'management';
 const DB_VERSION = 1;
 
-function getRequest() {
-    let request = indexedDB.open(DB_NAME, DB_VERSION);
-    request.onupgradeneeded = function (event) {
+function openDatabase() {
+    let open = indexedDB.open(DB_NAME, DB_VERSION);
+    open.onupgradeneeded = function (event) {
         upgrade(event);
     };
-    return request;
+    return open;
 }
 
 function dc(date) {
@@ -29,19 +29,36 @@ function upgrade(e) {
     console.log('upgrade');
 }
 
-function writeDiary(e, report) {
+function writeDiary(e, diary) {
     let database = e.target.result;
     let transaction = database.transaction('diary', 'readwrite');
     let store = transaction.objectStore('diary');
-    let add = store.add(report);
-    add.onsuccess = function () {
-        alert('更新しました')
-    }
+    let write = store.add(diary);
     database.close();
+    return write;
 }
 
-function updateDiary() {
+function updateDiary(e, diary) {
+    let database = e.target.result;
+    let transaction = database.transaction('diary', 'readonly');
+    let store = transaction.objectStore('diary');
+    let read = store.get(id);
+    read.onsuccess = function () {
+        let put = store.put(diary);
+        put.onsuccess = function (event) {
+            alert('更新が完了しました');
+            window.location.reload();
+        };
+    }
+}
 
+function readDiary(e, id) {
+    let database = e.target.result;
+    let transaction = database.transaction('diary', 'readonly');
+    let store = transaction.objectStore('diary');
+    let read = store.get(id);
+    database.close();
+    return read;
 }
 
 /**
@@ -81,12 +98,15 @@ function readYearDiaries(e, year) {
  * @param {Number} hourly
  */
 function updateSetting(e, hourly) {
-    let data = readSetting(e, 'readwrite');
-    data['setting'].onsuccess = function () {
-        let setting = data['setting'].result;
+    let database = e.target.result;
+    let transaction = database.transaction('setting', 'readwrite');
+    let store = transaction.objectStore('setting');
+    let read = store.get(1)
+    read.onsuccess = function () {
+        let setting = read.result;
         setting.hourly = hourly;
-        let put = data['store'].put(setting);
-        put.onsuccess = function (event) {
+        let write = store.put(setting);
+        write.onsuccess = function (event) {
             alert('更新が完了しました');
             window.location.reload();
         };
@@ -95,22 +115,15 @@ function updateSetting(e, hourly) {
 
 /**
  *
- * @param {String} type 'readonly' or 'readwrite'
  * @returns {IDBRequest<any>|{setting: IDBRequest<any>, store: IDBObjectStore}}
  */
-function readSetting(e, type) {
+function readSetting(e) {
     let database = e.target.result;
-    let transaction = database.transaction('setting', type);
+    let transaction = database.transaction('setting', 'readonly');
     let store = transaction.objectStore('setting');
-    let get = store.get(1)
+    let read = store.get(1)
     database.close();
-    switch (type) {
-        case 'readonly':
-            return get;
-        case 'readwrite':
-            return {'setting': get, 'store': store}
-    }
-
+    return read;
 }
 
 /**
@@ -173,18 +186,17 @@ function getValue() {
     return {'year': year, 'month': month};
 }
 
-
 //jQuery
 $(function () {
     if ($("#index").length) {
         //load
         setValue('init');
-        let request = getRequest();
-        request.onsuccess = function (event) {
+        let open = openDatabase();
+        open.onsuccess = function (event) {
             let value = getValue();
-            let month_diaries = readMonthDiaries(event, value['year'], value['month']);
-            month_diaries.onsuccess = function () {
-                console.log(month_diaries.result);
+            let read = readMonthDiaries(event, value['year'], value['month']);
+            read.onsuccess = function () {
+                console.log(read.result);
             }
             let year_diaries = readYearDiaries(event, value['year']);
             year_diaries.onsuccess = function () {
@@ -203,12 +215,12 @@ $(function () {
     if ($("#new").length) {
         //load
         $("input[name='date']").val(today('DAY'));
-        let request = getRequest();
-        request.onsuccess = function (event) {
-            let setting = readSetting(event, 'readonly');
-            setting.onsuccess = function () {
-                if (setting.result.hourly) {
-                    $("input[name='hourly']").val(setting.result.hourly);
+        let open = openDatabase();
+        open.onsuccess = function (event) {
+            let read = readSetting(event);
+            read.onsuccess = function () {
+                if (read.result.hourly) {
+                    $("input[name='hourly']").val(read.result.hourly);
                 } else {
                     window.location.href = 'setting.html';
                 }
@@ -225,15 +237,15 @@ $(function () {
                 alert('正確に時刻を入力してください');
             } else {
                 let details = $("textarea[name=details]").val();
-                let hourly = $("input[name=hourly]").val();
-                let wage = (time / 60000) * hourly / 60;
+                let hourly = Number($("input[name=hourly]").val());
+                let wage = Number((time / 60000) * hourly / 60);
                 let message = '勤務日\n' + dc(date) + '\n勤務時間\n' + start + ' - ' + finish + '\n給与\n' + wage + '\nMemo\n' + details;
 
                 let check = confirm(message);
                 if (check) {
-                    let request = getRequest();
-                    request.onsuccess = function (event) {
-                        let report = {
+                    let open = openDatabase();
+                    open.onsuccess = function (event) {
+                        let diary = {
                             date: Date.parse(date),
                             start: start,
                             finish: finish,
@@ -241,26 +253,32 @@ $(function () {
                             wage: wage,
                             option: {hourly: hourly}
                         };
-                        writeDiary(event, report);
-                        window.location.href = 'index.html';
+                        let write = writeDiary(event, diary);
+                        write.onsuccess = function () {
+                            alert('登録しました');
+                            window.location.href = 'index.html';
+                        }
+                        write.onerror = function () {
+                            alert('もう一度お試しください');
+                        }
                     }
                 }
             }
         })
     }
     if ($("#setting").length) {
-        let request = getRequest();
-        request.onsuccess = function (event) {
-            let setting = readSetting(event, 'readonly');
-            setting.onsuccess = function () {
-                $("input[name='hourly']").val(setting.result.hourly);
+        let open = openDatabase();
+        open.onsuccess = function (event) {
+            let read = readSetting(event);
+            read.onsuccess = function () {
+                $("input[name='hourly']").val(read.result.hourly);
             }
         }
 
         $("#submit").click(function () {
-            let hourly = $("input[name='hourly']").val();
-            let request = getRequest();
-            request.onsuccess = function (event) {
+            let hourly = Number($("input[name='hourly']").val());
+            let open = openDatabase();
+            open.onsuccess = function (event) {
                 updateSetting(event, hourly);
             }
         })
