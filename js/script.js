@@ -26,6 +26,11 @@ function upgrade(e) {
     let setting = database.createObjectStore('setting', {keyPath: 'id', autoIncrement: true});
     setting.createIndex('hourly', 'hourly');
     setting.put({id: 1, hourly: 0});
+    let month_diary = database.createObjectStore('month_diary', {keyPath: 'month'});
+    month_diary.createIndex('wage', 'wage');
+    month_diary.createIndex('time', 'time');
+    month_diary.createIndex('deduction', 'deduction');
+    month_diary.createIndex('days', 'days');
     console.log('upgrade');
 }
 
@@ -198,8 +203,8 @@ $(function () {
             read.onsuccess = function () {
                 console.log(read.result);
             }
-            let year_diaries = readYearDiaries(event, value['year']);
-            year_diaries.onsuccess = function () {
+            read = readYearDiaries(event, value['year']);
+            read.onsuccess = function () {
 
             }
         };
@@ -284,3 +289,4 @@ $(function () {
         })
     }
 });
+//$.getScript("./script.js");
