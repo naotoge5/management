@@ -16,17 +16,17 @@ function dc(date) {
 function upgrade(e) {
     console.log('version:' + e.oldVersion + ' to version:' + e.newVersion);
     let database = e.target.result;
-    let diary = database.createObjectStore('diary', {keyPath: 'id', autoIncrement: true});
+    let diary = database.createObjectStore('diary', { keyPath: 'id', autoIncrement: true });
     diary.createIndex('date', 'date');
     diary.createIndex('start', 'start');
     diary.createIndex('finish', 'finish');
     diary.createIndex('details', 'details');
     diary.createIndex('wage', 'wage');
     diary.createIndex('option', 'option');
-    let setting = database.createObjectStore('setting', {keyPath: 'id', autoIncrement: true});
+    let setting = database.createObjectStore('setting', { keyPath: 'id', autoIncrement: true });
     setting.createIndex('hourly', 'hourly');
-    setting.put({id: 1, hourly: 0});
-    let month_diary = database.createObjectStore('month_diary', {keyPath: 'month'});
+    setting.put({ id: 1, hourly: 0 });
+    let month_diary = database.createObjectStore('month_diary', { keyPath: 'month' });
     month_diary.createIndex('wage', 'wage');
     month_diary.createIndex('time', 'time');
     month_diary.createIndex('deduction', 'deduction');
@@ -188,7 +188,7 @@ function setValue(type, num = 0) {
 function getValue() {
     let year = Number($("#year strong").text());
     let month = Number($("#month strong").text());
-    return {'year': year, 'month': month};
+    return { 'year': year, 'month': month };
 }
 
 //jQuery
@@ -256,7 +256,7 @@ $(function () {
                             finish: finish,
                             details: details,
                             wage: wage,
-                            option: {hourly: hourly}
+                            option: { hourly: hourly }
                         };
                         let write = writeDiary(event, diary);
                         write.onsuccess = function () {
